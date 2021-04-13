@@ -16,9 +16,9 @@ namespace PauseMenu
             CheckForButtonPress();
         }
 
-        private void CheckForButtonPress()
+        private static void CheckForButtonPress()
         {
-            if (Input.GetKey(KeyCode.Escape))
+            if (Input.GetKeyDown(KeyCode.Escape))
             {
                 Debug.Log("Player pressing escape");
                 if(_gameIsPaused) TurnOnGame();
@@ -26,7 +26,7 @@ namespace PauseMenu
             }
         }
 
-        private void TurnOffGame()
+        private static void TurnOffGame()
         {
             Debug.Log("Pausing");
             _gameIsPaused = !_gameIsPaused;
@@ -34,7 +34,7 @@ namespace PauseMenu
             Time.timeScale = 0f;
         }
 
-        private void TurnOnGame()
+        private static void TurnOnGame()
         {
             Debug.Log("Entering Game again");
             _gameIsPaused = !_gameIsPaused;
