@@ -1,18 +1,33 @@
-﻿using System;
-using BepInEx;
-using UnityEngine;
+﻿using Deli.Patcher;
+using Deli.Setup;
+using FistVR;
 using HarmonyLib;
-using UnityEngine.EventSystems;
+using Mono.Cecil;
+using UnityEngine;
 
-namespace PauseMenu
+namespace PauseMenuDeli
 {
-    [BepInPlugin("PauseMenuMod", "PauseMenuMod", "1.0.0")]
-    public class PauseMenuMod : BaseUnityPlugin
+    public class MenuMod : DeliBehaviour
     {
         private static bool _gameIsPaused;
         
+        public MenuMod()
+        {
+            Debug.Log("Deli mod worked");
+            StartPatches();
+        }
+        
+        private void StartPatches()
+        {
+            Harmony.CreateAndPatchAll(typeof(MenuMod));
+            Debug.Log("Patching...");
+        }
+        
+        // Input stuff
+
         private void Update()
         {
+            Debug.Log("updaing deli works");
             CheckForButtonPress();
         }
 
@@ -33,7 +48,7 @@ namespace PauseMenu
 
             Time.timeScale = 0f;
         }
-
+        
         private static void TurnOnGame()
         {
             Debug.Log("Entering Game again");
@@ -41,5 +56,17 @@ namespace PauseMenu
 
             Time.timeScale = 1f;
         }
+        
+
+        // Patches
+
+        [HarmonyPatch(typeof(FVRPlayerBody), nameof(FVRPlayerBody.ConfigureQuickbelt))]
+        [HarmonyPostfix]
+        private void MenuPatch()
+        {
+            
+        }
+        
+        
     }
 }
