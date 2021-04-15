@@ -14,10 +14,17 @@ namespace PauseMenuDeli
         public MenuMod()
         {
             Debug.Log("Deli mod worked");
+
             StartPatches();
         }
+
+        private void Awake()
+        {
+            Debug.Log("Deli mod is awake");
+        }
         
-        private void StartPatches()
+        
+        private static void StartPatches()
         {
             Harmony.CreateAndPatchAll(typeof(MenuMod));
             Debug.Log("Patching...");
@@ -26,12 +33,6 @@ namespace PauseMenuDeli
         // Input stuff
 
         private void Update()
-        {
-            Debug.Log("updaing deli works");
-            CheckForButtonPress();
-        }
-
-        private static void CheckForButtonPress()
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
@@ -60,13 +61,19 @@ namespace PauseMenuDeli
 
         // Patches
 
-        [HarmonyPatch(typeof(FVRPlayerBody), nameof(FVRPlayerBody.ConfigureQuickbelt))]
+        [HarmonyPatch(typeof(FVRInteractiveObject), "BeginInteraction")]
         [HarmonyPostfix]
-        private void MenuPatch()
+        private static void MenuPatch()
         {
-            
+            Debug.Log("you tocuhed soemthing");
         }
         
-        
+        // Stops hand input
+        [HarmonyPatch(typeof(FVRViveHand), "PollInput")]
+        [HarmonyPrefix]
+        private static bool PollInputPatch()
+        {
+            return !_gameIsPaused;
+        }
     }
 }
